@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Registartion-form</title>
+    <style>
+      *{
+        text-align: center;
+      }
+      .body {
+        display: flex;
+        flex-direction: column;
+
+        justify-content: center;
+        align-content: center;
+        background-color: lightgreen;
+            font-size: xx-large;
+      }
+      .form {
+        position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+      }
+      #username,
+      #password,
+      #submit {
+        margin: 5px;
+      }
+      #submit {
+        padding: 5px;
+      }
+    </style>
+  </head>
+  <body class="body">
+    <div class="form">
+      Registration Form
+
+      <form id="reg-form">
+        <input type="text" id="Username" />
+        <input type="password" id="Password" />
+        <input type="submit" id="submit" />
+        <br>
+        <a href="./login.html">Login</a>
+      </form>
+    </div>
+  </body>
+  <script>
+    const form = document.getElementById("reg-form");
+    form.addEventListener("submit", handleSubmit);
+
+    async function handleSubmit(event) {
+      event.preventDefault();
+
+      const Username = document.getElementById("Username").value;
+      const Password = document.getElementById("Password").value;
+
+      const result = await fetch("/api/signup", {
+        method: "POST",
+        headers: {
+          "content-type": "application/json",
+          
+        },
+        body: JSON.stringify({ Username, Password }),
+      }).then((res)=> res.json());
+
+      if (result.status === 'ok') {
+        alert('Success!')
+        window.location.replace("http://localhost:5050/login.html");
+        
+      } else {
+        alert(result.error)
+      }
+    }
+  </script>
+</html>
