@@ -6,16 +6,19 @@ const bodyParser = require("body-parser");
 const path = require("path");
 const mongoose = require("mongoose");
 const bcrypt=require('bcryptjs');
-const jwt=require('jsonwebtoken')
+const jwt=require('jsonwebtoken');
+const dotenv=require('dotenv');
+
+dotenv.config();
 
 app.use(cors({ origin: "*" }));
 app.use(express.static(path.join(__dirname, "./static")));
 app.use(express.json());
 
-SECRET_TOKEN='huevr28r4g0*#$(*&#)*$&*TRYR&($Y(BTR*&T(Y(@(RY#YFHBEIUGFIUET*#T(*$^(*#$YBU#R*&#TR&(#RY(#RG$(U'
+
 
 mongoose.connect(
-  "mongodb+srv://irfan:Irfan@2102@cluster0.gikhu.mongodb.net/practice?retryWrites=true&w=majority",
+  process.env.MONGODB_URL,
   { useNewUrlParser: true, useUnifiedTopology: true, useCreateIndex: true }
 );
 
@@ -46,7 +49,7 @@ app.post('/api/login', async (req, res) => {
   if(user){
     if(await bcrypt.compare(Password, user.Password)){
 
-     const token=jwt.sign({id: user._id, Username: user.Username}, SECRET_TOKEN)
+     const token=jwt.sign({id: user._id, Username: user.Username}, process.env.SECRET_TOKEN)
       res.json({status: 'ok', data: token})
 
     }
@@ -69,7 +72,7 @@ app.post('/api/forgotPassword', async (req, res) => {
   const { token, newPassword }=req.body;
 
   try{
-  const user=jwt.verify(token, SECRET_TOKEN);
+  const user=jwt.verify(token, process.env.SECRET_TOKEN);
   
   const _id=user.id;
   
