@@ -43,7 +43,7 @@ app.post("/api/signup", async (req, res) => {
 });
 
 app.post('/api/login', async (req, res) => {
-  //console.log(req.body);
+  console.log(req.body);
   const { Username, Password }=req.body;
   const user=await model.findOne({ Username}).lean()
   if(user){
